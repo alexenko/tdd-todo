@@ -50,7 +50,7 @@ class NewVisitorTest(unittest.TestCase):
 
         # The page updates again, and now show both items on her list
         table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_element_by_tag_name('tr')
+        rows = table.find_elements_by_tag_name('tr')
         self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
         self.assertIn(
             '2: Use peacock feathers to make a fly',
