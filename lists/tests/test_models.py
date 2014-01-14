@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
@@ -37,3 +38,9 @@ class ListAndItemModelTest(TestCase):
         self.assertEqual(first_saved_item.list, list_)
         self.assertEqual(second_saved_item.text, 'Item the second')
         self.assertEqual(second_saved_item.list, list_)
+
+    def test_cannot_save_empty_list_items(self):
+        list1 = List.objects.create()
+        item = Item(list=list1, text='')
+        with self.assertRaises(ValidationError):
+            item.save()
