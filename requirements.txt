@@ -1,3 +1,4 @@
 Django==1.6.1
 gunicorn==18.0
 selenium==2.39.0
+South==0.8.4
