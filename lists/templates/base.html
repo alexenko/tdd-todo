@@ -6,30 +6,70 @@
     <link href="/static/base.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 col-md-offset-3 jumbotron">
-          <div class="text-center">
-            <h1>{% block header_text %}{% endblock %}</h1>
+  <div class="navbar">
+    {% if user.email %}
+      <p>Logged in as {{ user.email }}</p>
+      <p><a id="logout" href="{% url 'logout' %}">Sign out</a></p>
+    {% else %}
+      <a href="#" id="login">Sign in</a>
+    {% endif %}
+    <p>User: {{ user }}</p>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 jumbotron">
+        <div class="text-center">
+          <h1>{% block header_text %}{% endblock %}</h1>
 
-            <form method="POST" action="{% block form_action %}{% endblock %}">
-              {{ form.text }}
-              {% csrf_token %}
-              {% if form.errors %}
-                <div class="form-group has-error">
-                  <span class="help-block">{{ form.text.errors }}</span>
-                </div>
-              {% endif %}
-            </form>
-            {% block table %}
-            {% endblock %}
-          </div>
+          <form method="POST" action="{% block form_action %}{% endblock %}">
+            {{ form.text }}
+            {% csrf_token %}
+            {% if form.errors %}
+              <div class="form-group has-error">
+                <span class="help-block">{{ form.text.errors }}</span>
+              </div>
+            {% endif %}
+          </form>
+          {% block table %}
+          {% endblock %}
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="http://code.jquery.com/jquery.min.js"></script>
-    <script src="/static/list.js"></script>
+  <script src="http://code.jquery.com/jquery.min.js"></script>
+  <script src="/static/list.js"></script>
+  <script src="https://login.persona.org/include.js"></script>
+  <script>
+    $(document).ready(function() {
+      var loginLink = document.getElementById('login');
+      if (loginLink) {
+        loginLink.onclick = function() { navigator.id.request();};
+      }
+
+      var logoutLink = document.getElementById('logout');
+      if (logoutLink) {
+        logoutLink.onclick = function() { navigation.id.logout();};
+      }
+
+      var currentUser = '{{ user.email }}' || null;
+      var csrf_token = '{{ csrf_token }}';
+      console.log(currentUser);
+
+      navigator.id.watch({
+        loggedInUser: currentUser,
+        onlogin: function(assertion) {
+          $.post('/accounts/login', {assertion: assertion, csrfmiddlewaretoken: csrf_token})
+            .done(function() { window.location.reload(); })
+            .fail(function() { navigator.id.logout(); });
+        },
+        onlogout: function() {
+          $.post('/accounts/logout')
+            .always(function() { window.location.reload();});
+        }
+      })
+    });
+  </script>
 
   </body>
 </html>
