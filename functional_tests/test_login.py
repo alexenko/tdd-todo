@@ -30,7 +30,7 @@ class LoginTest(FunctionalTest):
         self.switch_to_new_window('To-Do')
 
         # Se can see that she is logged in
-        self.wait_for_element_with_id('logout')
+        self.wait_for_element_with_id('id_logout')
         navbar = self.browser.find_element_by_css_selector('.navbar')
         self.assertIn(TEST_EMAIL, navbar.text)
 
