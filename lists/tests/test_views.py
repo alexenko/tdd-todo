@@ -1,3 +1,4 @@
+from django.template.response import TemplateResponse
 from django.test import TestCase
 
 from django.core.urlresolvers import resolve
@@ -22,7 +23,7 @@ class HomePageTest(TestCase):
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = home_page(request)
-        expected_html = render_to_string('home.html', {'form': ItemForm()})
+        expected_html = TemplateResponse(request, 'home.html', {'form': ItemForm()}).render().content.decode()
         self.assertMultiLineEqual(response.content.decode(), expected_html)
 
     def test_home_page_only_saves_items_when_necessary(self):
