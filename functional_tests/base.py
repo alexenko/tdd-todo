@@ -31,7 +31,7 @@ class FunctionalTest(LiveServerTestCase):
 
     def tearDown(self):
         if not self._outcomeForDoCleanups.success:
-            if not os.exists(SCREEN_DUMP_LOCATION):
+            if not os.path.exists(SCREEN_DUMP_LOCATION):
                 os.makedirs(SCREEN_DUMP_LOCATION)
             for ix, handle in enumerate(self.browser.window_handles):
                 self._windowid = ix
