@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from .base import FunctionalTest
 import time
+from unittest import skip
 
 
 TEST_EMAIL = 'alex_tdd@yahoo.com'
@@ -9,6 +10,7 @@ TEST_PASSWORD = 'Iwanttobes3kur'
 
 class LoginTest(FunctionalTest):
 
+    @skip
     def test_login_with_persona(self):
         # Edith goes to the awesome superlists site
         # and notices a "Sign in" link for the first time.
